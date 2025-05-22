@@ -5,7 +5,7 @@ import { handleSlashCommand } from './handlers/commandHandler';
 import { handleMessage } from './handlers/messageHandler';
 import {Database} from "./repository/supabase";
 import { ChaseService } from "./services/ChaseService";
-import {Activity} from "./types";
+import {WarMember} from "./types";
 
 const client = new Client({
     intents: [
@@ -38,7 +38,7 @@ client.once(Events.ClientReady, async (readyClient) => {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
     await deployCommands();
 
-    const data: Activity[] | undefined = await Database.getData()
+    const data: WarMember[] | undefined = await Database.getData()
 
     if (data) {
         const allies = ChaseService.getAllies(data)

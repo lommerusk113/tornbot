@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { ENV } from '../config/environment';
-import {Activity} from "../types";
+import {WarMember} from "../types";
 
 export const supabase = createClient(
     ENV.SUPABASE_URL,
@@ -11,11 +11,11 @@ export class Database {
 
     static async getData() {
         const { data, error } = await supabase
-            .from('test')
+            .from('war_tracker')
             .select('*')
 
         if (error) throw error;
-        return data as Activity[];
+        return data as WarMember[];
     }
 
     static async insertData(id: string) {

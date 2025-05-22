@@ -1,26 +1,27 @@
-import {Activity, Chased} from "../types";
+import { Chased, Locations, WarMember} from "../types";
 
-const ASKELADDS = 1234
+const ASKELADDS = '41309'
 
 export class ChaseService {
 
-    static getAllies(activity: Activity[]) {
+    static getAllies(activity: WarMember[]) {
         return activity.filter(x => x.faction_id === ASKELADDS)
     }
 
-    static getEnemies(activity:Activity[]) {
+    static getEnemies(activity:WarMember[]) {
         return activity.filter(x => x.faction_id !== ASKELADDS)
     }
 
-    static getConflicts(allies: Activity[], enemies: Activity[]){
+    static getConflicts(allies: WarMember[], enemies: WarMember[]){
 
         const enemiesToCheck = enemies
-            .filter((enemy) => !enemy.alerted)
+            .filter((enemy) => !enemy.location.alerted)
 
-        const travelingEnemies = enemiesToCheck.filter(enemy => enemy.location.destination && enemy.location.destination !== "torn")
+        const travelingEnemies = enemiesToCheck
+            .filter(enemy => enemy.location.destination && enemy.location.destination !== Locations.torn)
 
         const riskyAllies = allies
-            .filter(x => (x.location.current != "torn" && x.location.destination != "torn") || x.location.destination !== "torn")
+            .filter(x => (x.location.current != Locations.torn && !x.location.destination) || x.location.destination && x.location.destination !== Locations.torn)
 
         return travelingEnemies.map(enemy => {
             const threatenedAllies = riskyAllies.filter(ally =>
