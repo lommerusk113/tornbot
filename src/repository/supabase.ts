@@ -1,0 +1,28 @@
+import { createClient } from '@supabase/supabase-js';
+import { ENV } from '../config/environment';
+import {Activity} from "../types";
+
+export const supabase = createClient(
+    ENV.SUPABASE_URL,
+    ENV.SUPABASE_ANON_KEY
+);
+
+export class Database {
+
+    static async getData() {
+        const { data, error } = await supabase
+            .from('test')
+            .select('*')
+
+        if (error) throw error;
+        return data as Activity[];
+    }
+
+    static async insertData(id: string) {
+        const { data, error } = await supabase
+            .from('command_logs')
+            .upsert({alerted: true})
+            .eq('id', id);
+    }
+
+}

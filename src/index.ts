@@ -3,6 +3,9 @@ import { ENV } from './config/environment';
 import { commands } from './commands';
 import { handleSlashCommand } from './handlers/commandHandler';
 import { handleMessage } from './handlers/messageHandler';
+import {Database} from "./repository/supabase";
+import { ChaseService } from "./services/ChaseService";
+import {Activity} from "./types";
 
 const client = new Client({
     intents: [
@@ -34,6 +37,22 @@ async function deployCommands() {
 client.once(Events.ClientReady, async (readyClient) => {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
     await deployCommands();
+
+    const data: Activity[] | undefined = await Database.getData()
+
+    if (data) {
+        const allies = ChaseService.getAllies(data)
+        const enemies = ChaseService.getEnemies(data)
+        const dangers = ChaseService.getConflicts(allies, enemies)
+
+        const message = dangers.flatMap(x => {
+            return x.threatenedAllies.map(y => {
+                return `${y.id} is getting chased by ${x.enemy.id}`
+            })
+        })
+
+    }
+
 });
 
 // Handle interactions
