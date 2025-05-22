@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Events, REST, Routes } from 'discord.js';
+import {Client, GatewayIntentBits, Events, REST, Routes, TextChannel} from 'discord.js';
 import { ENV } from './config/environment';
 import { commands } from './commands';
 import { handleSlashCommand } from './handlers/commandHandler';
@@ -45,11 +45,16 @@ client.once(Events.ClientReady, async (readyClient) => {
         const enemies = ChaseService.getEnemies(data)
         const dangers = ChaseService.getConflicts(allies, enemies)
 
-        const message = dangers.flatMap(x => {
+        const messages = dangers.flatMap(x => {
             return x.threatenedAllies.map(y => {
-                return `${y.id} is getting chased by ${x.enemy.id}`
+                return `<@${y.discord_id}> is getting chased by ${x.enemy.member_name}`
             })
         })
+
+        if (messages.length > 0) {
+            const channel = await client.channels.fetch(ENV.ALERT_CHANNEL_ID) as TextChannel
+            await channel.send(messages[0])
+        }
 
     }
 

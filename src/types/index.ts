@@ -16,7 +16,9 @@ export type Activity = {
     alerted: boolean
     id: number,
     member_id: number,
-    faction_id: number
+    faction_id: number,
+    member_name: string,
+    discord_id: string
 }
 
 export type Chased = {
