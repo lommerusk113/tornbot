@@ -47,13 +47,26 @@ client.once(Events.ClientReady, async (readyClient) => {
 
         const messages = dangers.flatMap(x => {
             return x.threatenedAllies.map(y => {
-                return `<@${y.discord_id}> is getting chased by ${x.enemy.member_name}`
+                const initiated = new Date(x.enemy.location.initiated!).toLocaleTimeString('nb-NO', {
+                    timeZone: 'Europe/Oslo',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                });
+                return `<@${y.discord_id}> is getting chased by [${x.enemy.member_name}](https://www.torn.com/profiles.php?XID=${x.enemy.member_id}), initiated at: ${initiated}`
             })
         })
 
         if (messages.length > 0) {
             const channel = await client.channels.fetch(ENV.ALERT_CHANNEL_ID) as TextChannel
-            await channel.send(messages[0])
+            for (const message of messages) {
+                await channel.send(message)
+            }
+
+            dangers.map(warnings => {
+                warnings.threatenedAllies.map(member => {
+                   Database.insertData(member.id)
+                })
+            })
         }
 
     }

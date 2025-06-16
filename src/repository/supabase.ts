@@ -18,11 +18,12 @@ export class Database {
         return data as WarMember[];
     }
 
-    static async insertData(id: string) {
-        const { data, error } = await supabase
-            .from('command_logs')
-            .upsert({alerted: true})
+    static async insertData(id?: number) {
+        await supabase
+            .from('war_tracker')
+            .update({ alerted: true })
             .eq('id', id);
+
     }
 
 }
