@@ -25,8 +25,9 @@ export class ChaseService {
 
         return travelingEnemies.map(enemy => {
             const threatenedAllies = riskyAllies.filter(ally =>
-                enemy.location.destination === ally.location.current ||
-                enemy.location.destination === ally.location.destination
+                !ally.alerted && ally.location.initiated! < enemy.location.initiated! &&
+                (enemy.location.destination === ally.location.current ||
+                enemy.location.destination === ally.location.destination)
             )
 
             return threatenedAllies.length > 0 ? {

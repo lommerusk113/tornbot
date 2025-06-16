@@ -6,6 +6,7 @@ import { handleMessage } from './handlers/messageHandler';
 import {Database} from "./repository/supabase";
 import { ChaseService } from "./services/ChaseService";
 import {WarMember} from "./types";
+import {AlertService} from "./services/AlertService";
 
 const client = new Client({
     intents: [
@@ -38,38 +39,9 @@ client.once(Events.ClientReady, async (readyClient) => {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
     await deployCommands();
 
-    const data: WarMember[] | undefined = await Database.getData()
-
-    if (data) {
-        const allies = ChaseService.getAllies(data)
-        const enemies = ChaseService.getEnemies(data)
-        const dangers = ChaseService.getConflicts(allies, enemies)
-
-        const messages = dangers.flatMap(x => {
-            return x.threatenedAllies.map(y => {
-                const initiated = new Date(x.enemy.location.initiated!).toLocaleTimeString('nb-NO', {
-                    timeZone: 'Europe/Oslo',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                });
-                return `<@${y.discord_id}> is getting chased by [${x.enemy.member_name}](https://www.torn.com/profiles.php?XID=${x.enemy.member_id}), initiated at: ${initiated}`
-            })
-        })
-
-        if (messages.length > 0) {
-            const channel = await client.channels.fetch(ENV.ALERT_CHANNEL_ID) as TextChannel
-            for (const message of messages) {
-                await channel.send(message)
-            }
-
-            dangers.map(warnings => {
-                warnings.threatenedAllies.map(member => {
-                   Database.insertData(member.id)
-                })
-            })
-        }
-
-    }
+    setInterval(async () => {
+        await AlertService.checkAndSendAlerts(client);
+    }, 5 * 60 * 1000)
 
 });
 

@@ -35,6 +35,7 @@ export interface WarMember {
     dexterity?: number;
     speed?: number;
     discord_id?: string
+    alerted: boolean
 }
 
 export enum Locations {
