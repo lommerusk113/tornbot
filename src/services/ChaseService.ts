@@ -1,6 +1,6 @@
 import { Chased, Locations, WarMember} from "../types";
 
-const faction_id: string = process.env.FACION_ID!;
+const faction_id: string = process.env.FACTION!;
 
 export class ChaseService {
 
