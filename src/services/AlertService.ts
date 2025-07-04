@@ -36,12 +36,8 @@ export class AlertService {
     private static formatAlertMessages(dangers: ReturnType<typeof ChaseService.getConflicts>): string[] {
         return dangers.flatMap(danger => {
             return danger.threatenedAllies.map(ally => {
-                const initiated = new Date(danger.enemy.location.initiated!).toLocaleTimeString('nb-NO', {
-                    timeZone: 'Europe/Oslo',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                });
-                return `<@${ally.discord_id}> is getting chased by [${danger.enemy.member_name}](https://www.torn.com/profiles.php?XID=${danger.enemy.member_id}), initiated at: ${initiated}`;
+                const initiatedTimestamp = Math.floor(new Date(danger.enemy.location.initiated!).getTime() / 1000);
+                return `<@${ally.discord_id}> is getting chased by [${danger.enemy.member_name}](https://www.torn.com/profiles.php?XID=${danger.enemy.member_id}), initiated at: <t:${initiatedTimestamp}:T>`;
             });
         });
     }
