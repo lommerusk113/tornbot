@@ -1,6 +1,6 @@
 import { Chased, Locations, WarMember} from "../types";
 
-const ASKELADDS = '41309'
+const ASKELADDS = '41066'
 
 export class ChaseService {
 
