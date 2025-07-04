@@ -33,14 +33,14 @@ export class AlertService {
         }
     }
 
-    private static formatAlertMessages(dangers: ReturnType<typeof ChaseService.getConflicts>): string[] {
-        return dangers.flatMap(danger => {
-            return danger.threatenedAllies.map(ally => {
-                const initiatedTimestamp = Math.floor(new Date(danger.enemy.location.initiated!).getTime() / 1000);
-                return `<@${ally.discord_id}> is getting chased by [${danger.enemy.member_name}](https://www.torn.com/profiles.php?XID=${danger.enemy.member_id}), initiated at: <t:${initiatedTimestamp}:T>`;
-            });
+private static formatAlertMessages(dangers: ReturnType<typeof ChaseService.getConflicts>): string[] {
+    return dangers.flatMap(danger => {
+        return danger.threatenedAllies.map(ally => {
+            const initiatedTimestamp = Math.floor(danger.enemy.location.initiated! / 1000);
+            return `<@${ally.discord_id}> is getting chased by [${danger.enemy.member_name}](https://www.torn.com/profiles.php?XID=${danger.enemy.member_id}), initiated at: <t:${initiatedTimestamp}:T>`;
         });
-    }
+    });
+}
 
     private static async sendAlerts(client: Client, messages: string[]): Promise<void> {
         if (messages.length === 0) return;
