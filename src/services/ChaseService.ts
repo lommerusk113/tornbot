@@ -1,15 +1,15 @@
 import { Chased, Locations, WarMember} from "../types";
 
-const ASKELADDS = '41309'
+const faction_id: string = process.env.FACION_ID!;
 
 export class ChaseService {
 
     static getAllies(activity: WarMember[]) {
-        return activity.filter(x => x.faction_id === ASKELADDS)
+        return activity.filter(x => x.faction_id === faction_id)
     }
 
     static getEnemies(activity:WarMember[]) {
-        return activity.filter(x => x.faction_id !== ASKELADDS)
+        return activity.filter(x => x.faction_id !== faction_id)
     }
 
     static getConflicts(allies: WarMember[], enemies: WarMember[]){
