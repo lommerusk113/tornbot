@@ -57,3 +57,32 @@ export type Chased = {
     enemy: WarMember
     threatenedAllies: WarMember[]
 }
+
+export interface TerritoryWatch {
+    id: number;
+    user_id: string;
+    territory_id: string;
+    channel_id: string;
+    created_at: string;
+}
+
+export interface TerritoryWar {
+    territory_war_id: number;
+    assaulting_faction: number;
+    defending_faction: number;
+    score: number;
+    required_score: number;
+    started: number;
+    ends: number;
+    assaulters: any[];
+    defenders: any[];
+}
+
+export interface TerritoryWarState {
+    territory_id: string;
+    is_at_war: boolean;
+    assaulting_faction?: number;
+    defending_faction?: number;
+    start_time?: number;
+    updated_at?: string;
+}

@@ -1,12 +1,13 @@
-import {Client, GatewayIntentBits, Events, REST, Routes, TextChannel} from 'discord.js';
+import { Client, GatewayIntentBits, Events, REST, Routes, TextChannel } from 'discord.js';
 import { ENV } from './config/environment';
 import { commands } from './commands';
 import { handleSlashCommand } from './handlers/commandHandler';
 import { handleMessage } from './handlers/messageHandler';
-import {Database} from "./repository/supabase";
+import { Database } from "./repository/supabase";
 import { ChaseService } from "./services/ChaseService";
-import {WarMember} from "./types";
-import {AlertService} from "./services/AlertService";
+import { WarMember } from "./types";
+import { AlertService } from "./services/AlertService";
+import { TerritoryWarService } from './services/TerritoryWarService';
 
 const client = new Client({
     intents: [
@@ -42,6 +43,9 @@ client.once(Events.ClientReady, async (readyClient) => {
     setInterval(async () => {
         await AlertService.checkAndSendAlerts(client);
     }, 5 * 60 * 1000)
+
+    await TerritoryWarService.start(client);
+
 
 });
 
