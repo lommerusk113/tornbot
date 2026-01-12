@@ -5,7 +5,8 @@ export class TornApi {
 
     static async getActiveTerritoryWars(key: string): Promise<Record<string, TerritoryWar> | null> {
         try {
-            const url = `${this.BASE_URL}?selections=territorywars&key=${key}`;
+            const cacheBuster = Date.now();
+            const url = `${this.BASE_URL}?selections=territorywars&key=${key}&timestamp=${cacheBuster}`;
             const response = await fetch(url);
             const data = await response.json();
 
